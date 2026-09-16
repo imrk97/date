@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Question</title>
+    <title>A Special Question 💕</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,7 +15,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffecd2 100%);
+            background: linear-gradient(135deg, #ffeef0 0%, #fce4ec 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,18 +24,18 @@
         }
 
         .card {
-            background: linear-gradient(145deg, #ffffff 0%, #fff5f5 100%);
-            border-radius: 30px;
+            background: #ffffff;
+            border-radius: 20px;
             padding: 40px;
             max-width: 450px;
             width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(255, 105, 135, 0.25);
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 1.8rem;
+            font-weight: 500;
             color: #d6336c;
             margin-bottom: 10px;
         }
@@ -47,13 +48,39 @@
 
         .visual-area {
             margin: 25px 0;
-            height: 200px;
-            background: linear-gradient(135deg, #ffe4e6 0%, #ffccd5 100%);
-            border-radius: 20px;
+            height: 150px;
+            background: linear-gradient(135deg, #ffeef0 0%, #fce4ec 100%);
+            border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 4rem;
+            font-size: 3rem;
+        }
+
+        .name-input {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .name-input input {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 2px solid #ffccd5;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .name-input input:focus {
+            border-color: #ff6b9d;
+        }
+
+        .name-input input::placeholder {
+            color: #999;
         }
 
         .buttons {
@@ -76,13 +103,13 @@
         .btn-yes {
             background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 100%);
             color: white;
-            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
         }
 
         .btn-no {
             background: linear-gradient(135deg, #ffccd5 0%, #ffb3c1 100%);
             color: #d6336c;
-            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
         }
 
         .success-screen {
@@ -90,18 +117,37 @@
         }
 
         .success-screen h2 {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             color: #d6336c;
             margin-bottom: 15px;
         }
 
         .success-screen p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #e91e63;
         }
 
         .success-emoji {
-            font-size: 5rem;
+            font-size: 3rem;
+        }
+
+        .sad-screen {
+            display: none;
+        }
+
+        .sad-screen h2 {
+            font-size: 1.8rem;
+            color: #d6336c;
+            margin-bottom: 15px;
+        }
+
+        .sad-screen p {
+            font-size: 1rem;
+            color: #e91e63;
+        }
+
+        .sad-emoji {
+            font-size: 3rem;
         }
 
         .confetti {
@@ -127,37 +173,63 @@
 <body>
     <div class="card">
         <div class="header" id="header">
-            <h1>Will you go on a date with me? 🌹</h1>
-            <p>I am coming to Kolkata during Durga Puja</p>
+            <h1>Want to go on a date while I'm in Kolkata? 🎉</h1>
+            <p>I'll be there during Durga Puja 🕉️</p>
         </div>
 
         <div class="visual-area" id="visualArea">
-            🌸💕🌸
+            😊✨
+        </div>
+
+        <div class="name-input">
+            <input type="text" id="nameInput" placeholder="Your name *" required />
         </div>
 
         <div class="buttons" id="buttons">
-            <button class="btn btn-yes" onclick="showSuccess()">Yes! 💖</button>
-            <button class="btn btn-no" id="noBtn">No 😢</button>
+            <button class="btn btn-yes" onclick="showSuccess()">Sure! 🎉</button>
+            <button class="btn btn-no" id="noBtn">Maybe next time</button>
         </div>
 
         <div class="success-screen" id="successScreen">
-            <div class="success-emoji">🥰</div>
-            <h2>Yay! See you then!</h2>
-            <p>I'm so excited! Can't wait! </p>
+            <div class="success-emoji">👍✨</div>
+            <h2>Great!</h2>
+            <p>Looking forward to our date! 🎊</p>
+        </div>
+
+        <div class="sad-screen" id="sadScreen" style="display: none;">
+            <div class="sad-emoji">😢</div>
+            <h2>That's okay!</h2>
+            <p>Maybe another time then... 🌸</p>
         </div>
     </div>
 
     <script>
+        // Initialize EmailJS
+        (function(){
+            emailjs.init("1Pp24LWgX5XtufCN_");
+        })();
+
         function showSuccess() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('Please enter your name first!');
+                document.getElementById('nameInput').focus();
+                return;
+            }
+            
             document.getElementById('header').style.display = 'none';
             document.getElementById('visualArea').style.display = 'none';
+            document.querySelector('.name-input').style.display = 'none';
             document.getElementById('buttons').style.display = 'none';
             document.getElementById('successScreen').style.display = 'block';
+            
+            // Send email notification
+            sendEmail('yes');
             
             // Create confetti
             const colors = ['#ff6b9d', '#ff8a80', '#ffb3c1', '#ffccd5', '#ffd1dc', '#ff69b4', '#ff1493', '#db7093'];
             
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
@@ -177,20 +249,102 @@
             }
         }
 
+        function showSadScreen() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                alert('Please enter your name first!');
+                document.getElementById('nameInput').focus();
+                return;
+            }
+            
+            document.getElementById('header').style.display = 'none';
+            document.getElementById('visualArea').style.display = 'none';
+            document.querySelector('.name-input').style.display = 'none';
+            document.getElementById('buttons').style.display = 'none';
+            document.getElementById('sadScreen').style.display = 'block';
+            
+            // Send email notification
+            sendEmail('no');
+        }
+
+        function sendEmail(response) {
+            const timestamp = new Date().toLocaleString();
+            const name = document.getElementById('nameInput').value.trim();
+            
+            const templateParams = {
+                to_email: 'rohankarmakar97@gmail.com',
+                name: name,
+                response: response,
+                timestamp: timestamp,
+                message: response === 'yes' ? 'They want to go on a date during Durga Puja!' : 'They are not interested at the moment.'
+            };
+
+            emailjs.send("service_26uy9w4", "template_t82ndog", templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response.status, response.text);
+                }, function(error) {
+                    console.log('Failed to send email:', error);
+                });
+        }
+
         // No button dodge effect
         const noBtn = document.getElementById('noBtn');
         let dodgeCount = 0;
+        const maxDodges = 7;
 
         function dodgeButton() {
+            if (dodgeCount >= maxDodges) {
+                // Stop dodging after max limit
+                noBtn.style.position = 'relative';
+                noBtn.style.left = 'auto';
+                noBtn.style.top = 'auto';
+                noBtn.style.zIndex = 'auto';
+                noBtn.textContent = 'Not interested';
+                noBtn.removeEventListener('mouseover', dodgeButton);
+                noBtn.removeEventListener('touchstart', dodgeButton);
+                noBtn.removeEventListener('click', dodgeButton);
+                
+                // Add click handler to show sad screen
+                noBtn.onclick = function() {
+                    showSadScreen();
+                };
+                return;
+            }
+
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
             const buttonRect = noBtn.getBoundingClientRect();
+            const card = document.querySelector('.card');
+            const cardRect = card.getBoundingClientRect();
             
-            const maxX = viewportWidth - buttonRect.width - 20;
-            const maxY = viewportHeight - buttonRect.height - 20;
+            // Calculate safe zones outside the card
+            const cardLeft = cardRect.left;
+            const cardRight = cardRect.right;
+            const cardTop = cardRect.top;
+            const cardBottom = cardRect.bottom;
             
-            const randomX = Math.max(20, Math.random() * maxX);
-            const randomY = Math.max(20, Math.random() * maxY);
+            // Generate random position outside card area
+            let randomX, randomY;
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            do {
+                randomX = Math.max(20, Math.random() * (viewportWidth - buttonRect.width - 40));
+                randomY = Math.max(20, Math.random() * (viewportHeight - buttonRect.height - 40));
+                attempts++;
+            } while (
+                attempts < maxAttempts &&
+                randomX > cardLeft - buttonRect.width &&
+                randomX < cardRight &&
+                randomY > cardTop - buttonRect.height &&
+                randomY < cardBottom
+            );
+            
+            // If we couldn't find a spot outside, force it to the right side
+            if (attempts >= maxAttempts) {
+                randomX = cardRight + 20;
+                randomY = Math.max(20, Math.random() * (viewportHeight - buttonRect.height - 40));
+            }
             
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
@@ -199,10 +353,12 @@
             
             dodgeCount++;
             
-            if (dodgeCount === 3) {
+            if (dodgeCount === 2) {
+                noBtn.textContent = 'Really? 🤔';
+            } else if (dodgeCount === 4) {
                 noBtn.textContent = 'Are you sure? 🥺';
-            } else if (dodgeCount === 5) {
-                noBtn.textContent = 'Please? 💕';
+            } else if (dodgeCount === 6) {
+                noBtn.textContent = 'Please? 😢';
             }
         }
 
