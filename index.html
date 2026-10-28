@@ -1,1 +1,286 @@
-Hello World! 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14020a">
+<title>Blooming Rose</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 35%, #3a0618 0%, #14020a 60%, #070006 100%);
+    font-family: Georgia, "Times New Roman", serif;
+    color: #ffd6e0;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #bg, #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: calc(env(safe-area-inset-top) + 9vh) 0 calc(env(safe-area-inset-bottom) + 7vh);
+  }
+  svg { width: 100%; height: 100%; max-width: 520px; overflow: visible; }
+  .msg {
+    position: fixed; left: 0; right: 0;
+    top: calc(env(safe-area-inset-top) + 4vh);
+    text-align: center;
+    font-size: clamp(28px, 9vw, 44px);
+    font-style: italic;
+    letter-spacing: .06em;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.6s ease, transform 1.6s ease;
+    text-shadow: 0 0 18px rgba(255, 77, 109, .65);
+  }
+  .hint {
+    position: fixed; left: 0; right: 0;
+    bottom: calc(env(safe-area-inset-bottom) + 3vh);
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: #ff9fb4;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .msg.show { opacity: 1; transform: none; }
+  .hint.show { opacity: .6; animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .2; } }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div id="stage">
+  <svg viewBox="-160 -230 320 600" preserveAspectRatio="xMidYMid meet" aria-label="Animated blooming rose">
+    <defs>
+      <linearGradient id="petalOut" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#4a000d"/>
+        <stop offset=".55" stop-color="#b3122f"/>
+        <stop offset="1" stop-color="#ff5c7a"/>
+      </linearGradient>
+      <linearGradient id="petalIn" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#2e0007"/>
+        <stop offset=".6" stop-color="#8f0b24"/>
+        <stop offset="1" stop-color="#e0294c"/>
+      </linearGradient>
+      <radialGradient id="glowG">
+        <stop offset="0" stop-color="#ff4d6d" stop-opacity=".5"/>
+        <stop offset="1" stop-color="#ff4d6d" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="coreG">
+        <stop offset="0" stop-color="#1a0004"/>
+        <stop offset="1" stop-color="#6d0718"/>
+      </radialGradient>
+      <linearGradient id="stemG" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#1f5a24"/>
+        <stop offset=".5" stop-color="#3f9142"/>
+        <stop offset="1" stop-color="#1b4d1f"/>
+      </linearGradient>
+      <linearGradient id="leafG" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6cc468"/>
+        <stop offset="1" stop-color="#1d5b22"/>
+      </linearGradient>
+    </defs>
+
+    <g id="plant">
+      <path id="stem" d="M0,340 C-18,250 22,160 -6,60 C-14,20 0,-40 0,-80"
+            fill="none" stroke="url(#stemG)" stroke-width="7" stroke-linecap="round"/>
+      <g id="thorns"></g>
+      <g id="leaves"></g>
+      <circle id="glow" cx="0" cy="-90" r="160" fill="url(#glowG)" opacity="0"/>
+      <g id="sepals" transform="translate(0,-84) scale(1,.6)"></g>
+      <g id="head" transform="translate(0,-90) scale(1,.82)"></g>
+    </g>
+  </svg>
+</div>
+
+<canvas id="fx"></canvas>
+<div class="msg" id="msg">For You</div>
+<div class="hint" id="hint">tap to bloom again</div>
+
+<script>
+(() => {
+  const NS = "http://www.w3.org/2000/svg";
+  const $ = id => document.getElementById(id);
+  const plant = $("plant"), stem = $("stem"), head = $("head"), glow = $("glow");
+  const msg = $("msg"), hint = $("hint");
+
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const easeOutBack = x => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2; };
+  const easeInOut = x => x < .5 ? 2 * x * x : 1 - (-2 * x + 2) ** 2 / 2;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const el = (tag, attrs, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    parent && parent.appendChild(n);
+    return n;
+  };
+  const progress = (t, start, dur) => clamp((t - start) / dur);
+
+  // Timeline (ms)
+  const T = { stem: [0, 1800], leaf: 900, sepal: [1400, 800], petals: 1700, glow: [3600, 2000], msg: 5400, hint: 6800, fall: 4800 };
+
+  // ---- Stem ----
+  const stemLen = stem.getTotalLength();
+  stem.style.strokeDasharray = stemLen;
+
+  // ---- Thorns ----
+  const thorns = [0.25, 0.42, 0.68].map((f, i) => {
+    const p = stem.getPointAtLength(stemLen * f);
+    const side = i % 2 ? -1 : 1;
+    const g = el("path", {
+      d: "M0,-3 L9,-7 L0,3Z", fill: "#2d6e30",
+      transform: `translate(${p.x + side * 2.5},${p.y}) scale(${side},1)`
+    }, $("thorns"));
+    return { g, f };
+  });
+
+  // ---- Leaves ----
+  const leafDefs = [
+    { f: .38, side: 1, rot: -28, s: 1.05 },
+    { f: .55, side: -1, rot: -22, s: .95 },
+    { f: .72, side: 1, rot: -35, s: .75 }
+  ];
+  const leaves = leafDefs.map((d, i) => {
+    const p = stem.getPointAtLength(stemLen * d.f);
+    const g = el("g", {}, $("leaves"));
+    el("path", { d: "M0,0 C15,-24 52,-28 74,-4 C50,12 18,15 0,0Z", fill: "url(#leafG)", stroke: "#174a1b", "stroke-width": 1 }, g);
+    el("path", { d: "M2,0 C25,-8 48,-8 70,-4", fill: "none", stroke: "#a6e3a1", "stroke-width": 1, opacity: .55 }, g);
+    for (let k = 1; k <= 3; k++) {
+      const x = k * 16;
+      el("path", { d: `M${x},${-k * .4 - 3} l10,-9 M${x},${-k * .4 - 3} l9,7`, fill: "none", stroke: "#a6e3a1", "stroke-width": .6, opacity: .35 }, g);
+    }
+    return { g, x: p.x, y: p.y, ...d, start: T.leaf + i * 350 };
+  });
+
+  // ---- Sepals ----
+  const sepals = Array.from({ length: 5 }, (_, i) =>
+    ({ g: el("path", { d: "M0,0 C-9,-22 -5,-48 0,-64 C5,-48 9,-22 0,0Z", fill: "#2f7a33", stroke: "#164219", "stroke-width": 1 }, $("sepals")), a: i * 72 + 36 }));
+
+  // ---- Petals ----
+  const layers = [
+    { n: 9, r: 94, w: .98 }, { n: 8, r: 82, w: .92 }, { n: 7, r: 68, w: .86 },
+    { n: 6, r: 54, w: .8 }, { n: 5, r: 40, w: .76 }, { n: 4, r: 28, w: .72 }, { n: 3, r: 17, w: .7 }
+  ];
+  const petalPath = (r, w) => {
+    const hw = r * w * .62;
+    return `M0,0 C${-hw},${-r * .25} ${-hw * 1.15},${-r * .85} ${-r * .18},${-r} ` +
+           `Q0,${-r * 1.08} ${r * .18},${-r} C${hw * 1.15},${-r * .85} ${hw},${-r * .25} 0,0Z`;
+  };
+  const petals = [];
+  layers.forEach((L, i) => {
+    const fromInner = layers.length - 1 - i;
+    for (let j = 0; j < L.n; j++) {
+      const g = el("path", {
+        d: petalPath(L.r * rand(.93, 1.05), L.w),
+        fill: i < 3 ? "url(#petalOut)" : "url(#petalIn)",
+        stroke: "#ff8fa3", "stroke-width": .8, "stroke-opacity": .35, opacity: 0
+      }, head);
+      petals.push({
+        g, a: j * 360 / L.n + i * 23 + rand(-6, 6), s: rand(.95, 1.04),
+        start: T.petals + fromInner * 380 + j * 45, dur: 1400
+      });
+    }
+  });
+  const core = el("circle", { r: 7, fill: "url(#coreG)", opacity: 0 }, head);
+
+  // ---- Canvases: twinkling stars (bg) + falling petals (fx) ----
+  const bg = $("bg"), fx = $("fx"), bctx = bg.getContext("2d"), fctx = fx.getContext("2d");
+  let W, H, dpr, stars = [], drops = [], lastSpawn = 0;
+  const resize = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    for (const c of [bg, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0); }
+    stars = Array.from({ length: Math.round(W * H / 9000) }, () =>
+      ({ x: Math.random() * W, y: Math.random() * H, r: rand(.4, 1.4), p: rand(0, 6.28), s: rand(.6, 1.6) }));
+  };
+  addEventListener("resize", resize);
+  resize();
+
+  const colors = ["#ff4d6d", "#c9184a", "#ff758f", "#a4133c", "#ff8fa3"];
+  const spawnDrop = () => drops.push({
+    x: rand(0, W), y: -20, vx: rand(-.3, .3), vy: rand(.6, 1.3), size: rand(6, 12),
+    rot: rand(0, 6.28), vr: rand(-.03, .03), ph: rand(0, 6.28), c: colors[(Math.random() * colors.length) | 0]
+  });
+
+  const drawCanvases = (t, now) => {
+    bctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      bctx.globalAlpha = .25 + .55 * (.5 + .5 * Math.sin(now / 1000 * s.s + s.p));
+      bctx.fillStyle = "#ffe5ec";
+      bctx.beginPath(); bctx.arc(s.x, s.y, s.r, 0, 6.28); bctx.fill();
+    }
+    bctx.globalAlpha = 1;
+
+    if (t > T.fall && drops.length < 28 && now - lastSpawn > 380) { spawnDrop(); lastSpawn = now; }
+    fctx.clearRect(0, 0, W, H);
+    drops = drops.filter(d => d.y < H + 30);
+    for (const d of drops) {
+      d.ph += .03; d.rot += d.vr;
+      d.x += d.vx + Math.sin(d.ph) * .6; d.y += d.vy;
+      fctx.save();
+      fctx.translate(d.x, d.y);
+      fctx.rotate(d.rot);
+      fctx.scale(1, Math.cos(d.ph * 1.3) * .8 + .2);
+      const grad = fctx.createRadialGradient(-d.size * .3, -d.size * .2, 1, 0, 0, d.size);
+      grad.addColorStop(0, "#ffb3c1"); grad.addColorStop(1, d.c);
+      fctx.fillStyle = grad;
+      fctx.globalAlpha = .85;
+      fctx.beginPath(); fctx.ellipse(0, 0, d.size, d.size * .62, 0, 0, 6.28); fctx.fill();
+      fctx.restore();
+    }
+  };
+
+  // ---- Main loop ----
+  let t0 = performance.now();
+  const frame = now => {
+    const t = now - t0;
+
+    stem.style.strokeDashoffset = stemLen * (1 - easeInOut(progress(t, ...T.stem)));
+    thorns.forEach(th => th.g.setAttribute("opacity", progress(t, T.stem[1] * th.f, 300)));
+
+    leaves.forEach(L => {
+      const e = easeOutBack(progress(t, L.start, 900));
+      const flutter = Math.sin(now / 900 + L.f * 10) * 3;
+      L.g.setAttribute("transform", `translate(${L.x},${L.y}) scale(${L.side * L.s * e},${L.s * e}) rotate(${L.rot + flutter})`);
+    });
+
+    const se = easeOutBack(progress(t, ...T.sepal));
+    sepals.forEach(s => s.g.setAttribute("transform", `rotate(${s.a}) scale(${se})`));
+
+    const bloomed = t > T.petals + 3500;
+    petals.forEach(p => {
+      const pr = progress(t, p.start, p.dur), e = easeOutBack(pr);
+      const breathe = bloomed ? 1 + .018 * Math.sin(now / 900 + p.a) : 1;
+      p.g.setAttribute("opacity", Math.min(1, pr * 3));
+      p.g.setAttribute("transform", `rotate(${p.a + (1 - e) * 35}) scale(${e * p.s * breathe})`);
+    });
+    core.setAttribute("opacity", progress(t, T.petals, 600));
+    glow.setAttribute("opacity", .9 * progress(t, ...T.glow) * (.85 + .15 * Math.sin(now / 1200)));
+
+    const sway = Math.sin(now / 1700) * 2.2 * progress(t, T.stem[1], 1500);
+    plant.setAttribute("transform", `rotate(${sway} 0 340)`);
+
+    msg.classList.toggle("show", t > T.msg);
+    hint.classList.toggle("show", t > T.hint);
+
+    drawCanvases(t, now);
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+
+  // Tap / click to replay
+  addEventListener("pointerdown", () => {
+    if (performance.now() - t0 < T.hint) return;
+    t0 = performance.now();
+    drops = [];
+  });
+})();
+</script>
+</body>
+</html>
