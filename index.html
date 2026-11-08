@@ -1,1 +1,762 @@
-Hello World! 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Diwali</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a0500 0%, #1a0a00 50%, #0a0500 100%);
+            overflow: hidden;
+            position: relative;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Stars background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 230px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 300px 150px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(1px 1px at 350px 200px, #fff, transparent),
+                radial-gradient(2px 2px at 420px 50px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 500px 180px, #fff, transparent),
+                radial-gradient(2px 2px at 580px 90px, rgba(255, 255, 255, 0.9), transparent);
+            background-size: 600px 300px;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Fireworks canvas */
+        #fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 60px;
+            text-shadow:
+                0 0 10px #ff6b00,
+                0 0 20px #ff6b00,
+                0 0 30px #ff6b00,
+                0 0 40px #ff6b00,
+                0 0 70px #ff6b00,
+                0 0 80px #ff6b00,
+                0 0 100px #ff6b00;
+            animation: glow 2s ease-in-out infinite alternate, float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow:
+                    0 0 10px #ff6b00,
+                    0 0 20px #ff6b00,
+                    0 0 30px #ff6b00,
+                    0 0 40px #ff6b00,
+                    0 0 70px #ff6b00,
+                    0 0 80px #ff6b00,
+                    0 0 100px #ff6b00;
+            }
+            to {
+                text-shadow:
+                    0 0 20px #ff6b00,
+                    0 0 30px #ff6b00,
+                    0 0 40px #ff6b00,
+                    0 0 50px #ff6b00,
+                    0 0 80px #ff6b00,
+                    0 0 90px #ff6b00,
+                    0 0 120px #ff6b00,
+                    0 0 150px #ff6b00;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .container:active {
+            transform: scale(0.95);
+        }
+
+        .shadow {
+            position: absolute;
+            bottom: 20px;
+            width: 180px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        .diya {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            background: linear-gradient(180deg, #d4a574 0%, #b8956c 50%, #8b6914 100%);
+            border-radius: 0 0 100px 100px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 -20px 30px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .diya::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 60px;
+            background: linear-gradient(180deg, #c49a6c 0%, #a67c52 100%);
+            border-radius: 0 0 70px 70px;
+        }
+
+        .diya::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(180deg, #1a0a00 0%, #2d1810 100%);
+            border-radius: 0 0 50px 50px;
+        }
+
+        .inside {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 30px;
+            background: linear-gradient(180deg, #ff6b00 0%, #ff4500 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff6b00, 0 0 40px #ff4500;
+        }
+
+        .flame {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 70px;
+            background: linear-gradient(180deg, #ff6b00 0%, #ff4500 50%, #ff0000 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.3s ease-in-out infinite alternate;
+            box-shadow:
+                0 0 20px #ff6b00,
+                0 0 40px #ff4500,
+                0 0 60px #ff0000,
+                0 0 80px #ff6b00;
+        }
+
+        .flame::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 40px;
+            background: linear-gradient(180deg, #ffff00 0%, #ff6b00 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1) rotate(-2deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateX(-50%) scale(1.05) rotate(1deg);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateX(-50%) scale(0.95) rotate(-1deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translateX(-50%) scale(1.02) rotate(2deg);
+                opacity: 0.95;
+            }
+            100% {
+                transform: translateX(-50%) scale(1) rotate(-2deg);
+                opacity: 1;
+            }
+        }
+
+        .light {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 150px;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 0, 0.4) 0%, transparent 70%);
+            animation: lightPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes lightPulse {
+            from {
+                opacity: 0.6;
+                transform: translateX(-50%) scale(1);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        /* Decorative elements */
+        .decorations {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: glitter 2s ease-in-out infinite;
+            box-shadow: 0 0 6px #ffd700, 0 0 12px #ff6b00;
+        }
+
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 50%;
+            animation: glitterInner 2s ease-in-out infinite;
+        }
+
+        @keyframes glitter {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+                box-shadow: 0 0 6px #ffd700, 0 0 12px #ff6b00;
+            }
+            25% {
+                opacity: 0.8;
+                transform: scale(1.2) rotate(45deg);
+                box-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00, 0 0 30px #ff4500;
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(90deg);
+                box-shadow: 0 0 15px #ffd700, 0 0 25px #ff6b00, 0 0 35px #ff4500;
+            }
+            75% {
+                opacity: 0.8;
+                transform: scale(1.2) rotate(135deg);
+                box-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00, 0 0 30px #ff4500;
+            }
+        }
+
+        @keyframes glitterInner {
+            0%, 100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translate(-50%, -50%) scale(0.6);
+            }
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; animation-duration: 1.8s; }
+        .sparkle:nth-child(2) { top: 30%; right: 25%; animation-delay: 0.3s; animation-duration: 2.2s; background: #ff6b00; }
+        .sparkle:nth-child(3) { top: 15%; left: 60%; animation-delay: 0.6s; animation-duration: 1.5s; background: #ff4500; }
+        .sparkle:nth-child(4) { bottom: 30%; left: 15%; animation-delay: 0.9s; animation-duration: 2.5s; }
+        .sparkle:nth-child(5) { bottom: 20%; right: 20%; animation-delay: 1.2s; animation-duration: 1.9s; background: #ffff00; }
+        .sparkle:nth-child(6) { top: 40%; left: 40%; animation-delay: 0.4s; animation-duration: 2.1s; }
+        .sparkle:nth-child(7) { top: 50%; right: 30%; animation-delay: 0.7s; animation-duration: 1.7s; background: #ff6b00; }
+        .sparkle:nth-child(8) { bottom: 40%; left: 50%; animation-delay: 1s; animation-duration: 2.3s; background: #ffd700; }
+        .sparkle:nth-child(9) { top: 25%; left: 45%; animation-delay: 1.5s; animation-duration: 2s; width: 8px; height: 8px; }
+        .sparkle:nth-child(10) { top: 60%; right: 40%; animation-delay: 1.8s; animation-duration: 1.6s; background: #ff4500; width: 5px; height: 5px; }
+        .sparkle:nth-child(11) { bottom: 50%; left: 25%; animation-delay: 2s; animation-duration: 2.4s; }
+        .sparkle:nth-child(12) { top: 35%; right: 10%; animation-delay: 0.5s; animation-duration: 1.8s; background: #ffff00; width: 7px; height: 7px; }
+
+        /* Floating lanterns */
+        .lantern {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(180deg, #ff6b00 0%, #ff4500 100%);
+            border-radius: 5px 5px 15px 15px;
+            opacity: 0.8;
+            animation: floatLantern 8s ease-in-out infinite;
+            box-shadow: 0 0 20px #ff6b00;
+        }
+
+        .lantern::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 5px;
+            background: #8b4513;
+        }
+
+        .lantern::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 5px;
+            background: #8b4513;
+        }
+
+        @keyframes floatLantern {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-30px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-60px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-30px) translateX(5px);
+            }
+        }
+
+        .lantern:nth-child(9) { top: 80%; left: 10%; animation-delay: 0s; animation-duration: 10s; }
+        .lantern:nth-child(10) { top: 85%; left: 20%; animation-delay: 2s; animation-duration: 12s; }
+        .lantern:nth-child(11) { top: 75%; right: 15%; animation-delay: 1s; animation-duration: 11s; }
+        .lantern:nth-child(12) { top: 90%; right: 25%; animation-delay: 3s; animation-duration: 9s; }
+        .lantern:nth-child(13) { top: 70%; left: 30%; animation-delay: 1.5s; animation-duration: 13s; }
+        .lantern:nth-child(14) { top: 85%; right: 35%; animation-delay: 2.5s; animation-duration: 10.5s; }
+
+        /* Rangoli pattern */
+        .rangoli {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 100px;
+            z-index: 2;
+        }
+
+        .rangoli-petal {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b00, #ffd700, #ff6b00);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: rotatePetal 10s linear infinite;
+        }
+
+        @keyframes rotatePetal {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+                padding: 0 10px;
+            }
+            .container {
+                transform: scale(0.6);
+            }
+            .container:active {
+                transform: scale(0.57) !important;
+            }
+            .rangoli {
+                width: 250px;
+                bottom: 30px;
+            }
+            .rangoli-petal {
+                width: 15px;
+                height: 30px;
+            }
+            .lantern {
+                width: 20px;
+                height: 28px;
+            }
+            .sparkle {
+                width: 4px;
+                height: 4px;
+            }
+            .sparkle:nth-child(9) { width: 6px; height: 6px; }
+            .sparkle:nth-child(10) { width: 3px; height: 3px; }
+            .sparkle:nth-child(12) { width: 5px; height: 5px; }
+            .touch-hint {
+                font-size: 0.75rem;
+                bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            .container {
+                transform: scale(0.5);
+            }
+            .container:active {
+                transform: scale(0.475) !important;
+            }
+            .rangoli {
+                width: 200px;
+                bottom: 20px;
+            }
+            .rangoli-petal {
+                width: 12px;
+                height: 25px;
+            }
+            .lantern {
+                width: 18px;
+                height: 25px;
+            }
+            .sparkle {
+                width: 3px;
+                height: 3px;
+            }
+            .sparkle:nth-child(9) { width: 5px; height: 5px; }
+            .sparkle:nth-child(10) { width: 2px; height: 2px; }
+            .sparkle:nth-child(12) { width: 4px; height: 4px; }
+            .touch-hint {
+                font-size: 0.7rem;
+                bottom: 10px;
+            }
+        }
+
+        /* Touch hint */
+        .touch-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 215, 0, 0.6);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            z-index: 15;
+            animation: pulseHint 2s ease-in-out infinite;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .touch-hint.hidden {
+            opacity: 0;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworks"></canvas>
+    <h1 class="title">Happy Diwali</h1>
+    <div class="container">
+        <div class="shadow"></div>
+        <div class="diya"></div>
+        <div class="inside">
+            <div class="flame"></div>
+        </div>
+        <div class="light"></div>
+    </div>
+    <div class="decorations">
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="lantern"></div>
+        <div class="lantern"></div>
+        <div class="lantern"></div>
+        <div class="lantern"></div>
+        <div class="lantern"></div>
+        <div class="lantern"></div>
+    </div>
+    <div class="rangoli" id="rangoli"></div>
+    <div class="touch-hint">Tap anywhere for fireworks!</div>
+
+    <script>
+        // Fireworks animation
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fireworks = [];
+        const particles = [];
+
+        function createFirework(x, y) {
+            const colors = ['#ff6b00', '#ffd700', '#ff4500', '#ff0000', '#ffff00', '#00ff00', '#00ffff', '#ff00ff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const particleCount = 100;
+
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (Math.PI * 2 / particleCount) * i;
+                const velocity = Math.random() * 5 + 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * velocity,
+                    vy: Math.sin(angle) * velocity,
+                    color: color,
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.01
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.05; // gravity
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 5, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            updateParticles();
+            drawParticles();
+
+            // Random fireworks
+            if (Math.random() < 0.03) {
+                createFirework(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height * 0.5
+                );
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Click/tap to create fireworks
+        let interactionCount = 0;
+        function handleInteraction(x, y) {
+            // Hide hint after first interaction
+            if (interactionCount === 0) {
+                document.querySelector('.touch-hint').classList.add('hidden');
+            }
+            interactionCount++;
+
+            // Create multiple fireworks for more impact
+            createFirework(x, y);
+            setTimeout(() => createFirework(x - 30, y - 20), 100);
+            setTimeout(() => createFirework(x + 30, y - 20), 200);
+            setTimeout(() => createFirework(x, y - 40), 300);
+
+            // Create burst of sparkles at click position
+            for (let i = 0; i < 10; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'particle';
+                sparkle.style.left = `${x}px`;
+                sparkle.style.top = `${y}px`;
+                sparkle.style.width = '5px';
+                sparkle.style.height = '5px';
+                sparkle.style.background = ['#ffd700', '#ff6b00', '#ff4500', '#ff0000'][Math.floor(Math.random() * 4)];
+                sparkle.style.animation = 'none';
+                sparkle.style.transition = 'all 0.5s ease-out';
+                document.querySelector('.decorations').appendChild(sparkle);
+
+                setTimeout(() => {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 100 + 50;
+                    sparkle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`;
+                    sparkle.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => sparkle.remove(), 500);
+            }
+        }
+
+        // Mouse click on body/canvas
+        document.body.addEventListener('click', (e) => {
+            // Don't trigger if clicking on diya (handled separately)
+            if (!e.target.closest('.container')) {
+                handleInteraction(e.clientX, e.clientY);
+            }
+        });
+
+        // Touch events
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleInteraction(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        // Diya click/tap
+        const diyaContainer = document.querySelector('.container');
+        diyaContainer.addEventListener('click', (e) => {
+            const rect = diyaContainer.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            handleInteraction(x, y);
+        });
+
+        diyaContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = diyaContainer.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            handleInteraction(x, y);
+        }, { passive: false });
+
+        // Create rangoli pattern
+        const rangoli = document.getElementById('rangoli');
+        for (let i = 0; i < 12; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'rangoli-petal';
+            petal.style.left = '50%';
+            petal.style.top = '50%';
+            petal.style.transform = `rotate(${i * 30}deg) translateX(60px)`;
+            petal.style.animationDelay = `${i * 0.1}s`;
+            rangoli.appendChild(petal);
+        }
+
+        // Create floating particles
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 4}s`;
+            particle.style.animationDuration = `${Math.random() * 3 + 3}s`;
+            document.querySelector('.decorations').appendChild(particle);
+        }
+    </script>
+</body>
+</html>
